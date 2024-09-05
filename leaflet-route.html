@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet.js Routing Example</title>
+    
+    <!-- Include Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+    
+    <style>
+        /* Set the size of the map container */
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+        .leaflet-routing-container {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Leaflet.js Map with Route</h1>
+
+<!-- Map container -->
+<div id="map"></div>
+
+<!-- Include Leaflet and Routing Machine JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+
+<script>
+    // Initialize the map and set its view
+    var map = L.map('map').setView([51.505, -0.09], 13);
+
+    // Add a tile layer to the map (OpenStreetMap)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    // Add routing control
+    L.Routing.control({
+        waypoints: [
+            L.latLng(51.505, -0.09),  // Start point
+            L.latLng(51.51, -0.1),    // Intermediate point
+            L.latLng(51.52, -0.12)    // End point
+        ],
+        draggableWaypoints: false,
+        show: false  // This hides the instructions box
+    }).addTo(map);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet.js Location Example</title>
+    
+    <!-- Include Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+    
+    <style>
+        /* Set the size of the map container */
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Leaflet.js Map with User Location</h1>
+
+<!-- Map container -->
+<div id="map"></div>
+
+<!-- Include Leaflet JS and Routing Machine -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+
+<script>
+    // Initialize the map
+    var map = L.map('map').setView([51.505, -0.09], 13);
+
+    // Add tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    // Locate the user's current position and center the map on it
+    map.locate({setView: true, maxZoom: 16});
+
+    // Add a marker and accuracy circle when location is found
+    map.on('locationfound', function(e) {
+        var radius = e.accuracy / 2;
+        
+        // Marker at user's location
+        L.marker(e.latlng).addTo(map)
+            .bindPopup("You are within " + radius + " meters of this point").openPopup();
+
+        // Circle representing accuracy
+        L.circle(e.latlng, radius).addTo(map);
+    });
+
+    // Handle location errors
+    map.on('locationerror', function(e) {
+        alert("Location access denied.");
+    });
+
+</script>
+
+</body>
+</html>
