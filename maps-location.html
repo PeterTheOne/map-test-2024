@@ -34,6 +34,14 @@
 
 <script>
     let map;
+    let markers = [];
+    let pointsOfInterest = [
+        { title: 'test', position: { lng: 15.4534531, lat: 47.0657526 } },
+        { title: 'test', position: { lng: 15.455287, lat: 47.0669105 } },
+        { title: 'test', position: { lng: 15.456319, lat: 47.0683066 } },
+        { title: 'test', position: { lng: 15.4543517, lat: 47.0696725 } },
+        { title: 'test', position: { lng: 15.4472603, lat: 47.06586969999999 } },
+    ];
     let liveLocationWatchId;
 
     let markerElement;
@@ -51,6 +59,22 @@
             center: {lat: 47.070833, lng: 15.438611}, // Default center
             mapId: "4504f8b37365c3d0",
         });
+
+        const ctaLayer = new google.maps.KmlLayer({
+            //url: "https://baugeschichte.at/images/b/b0/Rundgang_Herz-Jesu.kml",
+            url: "https://stefangrassberger.dev/temp/Rundgang_Herz-Jesu.kml",
+            map: map,
+        });
+
+        // Set markers for points of interest
+        for ( const poi of pointsOfInterest ) {
+            // Add a marker at the user's location
+            markers.push( new google.maps.Marker({
+                position: poi.position,
+                map: map,
+                title: poi.title,
+            }) );
+        }
     }
 
     function handleLocationError(browserHasGeolocation, pos) {
