@@ -28,11 +28,45 @@
     var directionsService;
     var directionsRenderer;
 
+    function reformatCoords(x) {
+        var values = x.split( ',' );
+        return { lat: parseFloat( values[1] ), lng: parseFloat( values[0] ) };
+    }
+
     function initMap() {
+
+        var waypointsString = '15.45345,47.06575,0 15.45307,47.06602,0 15.45325,47.06603,0 15.45381,47.0661,0 15.45418,47.06613,0 15.4546,47.06617,0 15.4552,47.06620000000001,0 15.45554,47.06624,0 15.45553,47.06625999999999,0 15.45554,47.06627,0 15.45554,47.06628,0 15.45555,47.06629,0 15.45556,47.0663,0 15.45557,47.06631000000001,0 15.45558,47.06631000000001,0 15.4556,47.06631999999999,0 15.45554,47.06644,0 15.45529,47.06691,0 15.45498,47.06747,0 15.45664,47.06806999999999,0 15.45632,47.06831,0 15.45553,47.06889,0 15.45435,47.06967,0 15.45364,47.06931000000001,0 15.45273,47.06884000000001,0 15.45216,47.06851,0 15.4512,47.068,0 15.45045,47.0676,0 15.45003,47.06737,0 15.4486,47.06677,0 15.44825,47.06663,0 15.4479,47.06654,0 15.44756,47.06646,0 15.4472,47.06642000000001,0 15.44684,47.06642999999999,0 15.44721,47.06592,0 15.44726,47.06587,0';
+        var waypoints = waypointsString.split( ' ' );
+
+        waypoints = waypoints.map( reformatCoords );
+
+        var origin = waypoints[0];
+        var destination = waypoints[waypoints.length - 1];
+
+        Object.keys(waypoints).forEach( function(key, index) {
+            waypoints[key] = { location: waypoints[index], stopover: true };
+        } );
+
+        var iMax = Math.min( waypoints.length - 2, 25 ); // limit to 25, skip destination
+        console.log(iMax);
+        var waypointsLimited = [];
+
+        for ( var i = 0; i <= iMax; i++ ) {
+            console.log(waypoints[i] );
+
+            if ( i < 1 ) {
+                continue; // skip origin
+            }
+            
+            waypointsLimited.push( waypoints[i] );
+        }
+
+        console.log(waypointsLimited, origin, destination);
+
         // Initialize the map
         map = new google.maps.Map(document.getElementById('map'), {
             zoom: 7,
-            center: {lat: 41.85, lng: -87.65}  // Default center point
+            center: origin  // Default center point
         });
 
         // Initialize the Directions Service and Directions Renderer
@@ -42,12 +76,10 @@
 
         // Define the route
         var request = {
-            origin: {lat: 41.85, lng: -87.65},  // Starting point
-            destination: {lat: 41.85, lng: -87.7},  // Ending point
-            waypoints: [
-                {location: {lat: 41.85, lng: -87.68}, stopover: true}  // Intermediate point
-            ],
-            travelMode: 'DRIVING'
+            origin: origin,  // Starting point
+            destination: destination,  // Ending point
+            waypoints: waypointsLimited,  // Intermediate points
+            travelMode: 'WALKING'
         };
 
         // Draw the route on the map
